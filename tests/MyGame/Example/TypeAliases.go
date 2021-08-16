@@ -7,22 +7,25 @@ import (
 )
 
 type TypeAliasesT struct {
-	I8 int8
-	U8 byte
-	I16 int16
-	U16 uint16
-	I32 int32
-	U32 uint32
-	I64 int64
-	U64 uint64
-	F32 float32
-	F64 float64
-	V8 []int8
+	I8   int8
+	U8   byte
+	I16  int16
+	U16  uint16
+	I32  int32
+	U32  uint32
+	I64  int64
+	U64  uint64
+	F32  float32
+	F64  float64
+	V8   []int8
 	Vf64 []float64
 }
 
+// TypeAliasesT object pack function
 func (t *TypeAliasesT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
 	v8Offset := flatbuffers.UOffsetT(0)
 	if t.V8 != nil {
 		v8Length := len(t.V8)
@@ -30,7 +33,7 @@ func (t *TypeAliasesT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		for j := v8Length - 1; j >= 0; j-- {
 			builder.PrependInt8(t.V8[j])
 		}
-		v8Offset = builder.EndVector(v8Length)
+		v8Offset = TypeAliasesEndV8Vector(builder, v8Length)
 	}
 	vf64Offset := flatbuffers.UOffsetT(0)
 	if t.Vf64 != nil {
@@ -39,8 +42,11 @@ func (t *TypeAliasesT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 		for j := vf64Length - 1; j >= 0; j-- {
 			builder.PrependFloat64(t.Vf64[j])
 		}
-		vf64Offset = builder.EndVector(vf64Length)
+		vf64Offset = TypeAliasesEndVf64Vector(builder, vf64Length)
 	}
+
+	// pack process all field
+
 	TypeAliasesStart(builder)
 	TypeAliasesAddI8(builder, t.I8)
 	TypeAliasesAddU8(builder, t.U8)
@@ -57,6 +63,7 @@ func (t *TypeAliasesT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return TypeAliasesEnd(builder)
 }
 
+// TypeAliasesT object unpack function
 func (rcv *TypeAliases) UnPackTo(t *TypeAliasesT) {
 	t.I8 = rcv.I8()
 	t.U8 = rcv.U8()
@@ -81,7 +88,9 @@ func (rcv *TypeAliases) UnPackTo(t *TypeAliasesT) {
 }
 
 func (rcv *TypeAliases) UnPack() *TypeAliasesT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &TypeAliasesT{}
 	rcv.UnPackTo(t)
 	return t
@@ -91,6 +100,7 @@ type TypeAliases struct {
 	_tab flatbuffers.Table
 }
 
+// GetRootAsTypeAliases shortcut to access root table
 func GetRootAsTypeAliases(buf []byte, offset flatbuffers.UOffsetT) *TypeAliases {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &TypeAliases{}
@@ -234,19 +244,19 @@ func (rcv *TypeAliases) MutateF64(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }
 
+func (rcv *TypeAliases) V8Length() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
 func (rcv *TypeAliases) V8(j int) int8 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetInt8(a + flatbuffers.UOffsetT(j*1))
-	}
-	return 0
-}
-
-func (rcv *TypeAliases) V8Length() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
@@ -260,19 +270,19 @@ func (rcv *TypeAliases) MutateV8(j int, n int8) bool {
 	return false
 }
 
+func (rcv *TypeAliases) Vf64Length() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
 func (rcv *TypeAliases) Vf64(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
-	}
-	return 0
-}
-
-func (rcv *TypeAliases) Vf64Length() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
@@ -289,48 +299,71 @@ func (rcv *TypeAliases) MutateVf64(j int, n float64) bool {
 func TypeAliasesStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
 }
+
 func TypeAliasesAddI8(builder *flatbuffers.Builder, i8 int8) {
 	builder.PrependInt8Slot(0, i8, 0)
 }
+
 func TypeAliasesAddU8(builder *flatbuffers.Builder, u8 byte) {
 	builder.PrependByteSlot(1, u8, 0)
 }
+
 func TypeAliasesAddI16(builder *flatbuffers.Builder, i16 int16) {
 	builder.PrependInt16Slot(2, i16, 0)
 }
+
 func TypeAliasesAddU16(builder *flatbuffers.Builder, u16 uint16) {
 	builder.PrependUint16Slot(3, u16, 0)
 }
+
 func TypeAliasesAddI32(builder *flatbuffers.Builder, i32 int32) {
 	builder.PrependInt32Slot(4, i32, 0)
 }
+
 func TypeAliasesAddU32(builder *flatbuffers.Builder, u32 uint32) {
 	builder.PrependUint32Slot(5, u32, 0)
 }
+
 func TypeAliasesAddI64(builder *flatbuffers.Builder, i64 int64) {
 	builder.PrependInt64Slot(6, i64, 0)
 }
+
 func TypeAliasesAddU64(builder *flatbuffers.Builder, u64 uint64) {
 	builder.PrependUint64Slot(7, u64, 0)
 }
+
 func TypeAliasesAddF32(builder *flatbuffers.Builder, f32 float32) {
 	builder.PrependFloat32Slot(8, f32, 0.0)
 }
+
 func TypeAliasesAddF64(builder *flatbuffers.Builder, f64 float64) {
 	builder.PrependFloat64Slot(9, f64, 0.0)
 }
+
+func TypeAliasesStartV8Vector(builder *flatbuffers.Builder, numElems int) {
+	builder.StartVector(1, numElems, 1)
+}
+
+func TypeAliasesEndV8Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.EndVector(numElems)
+}
+
 func TypeAliasesAddV8(builder *flatbuffers.Builder, v8 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(v8), 0)
 }
-func TypeAliasesStartV8Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(1, numElems, 1)
+
+func TypeAliasesStartVf64Vector(builder *flatbuffers.Builder, numElems int) {
+	builder.StartVector(8, numElems, 8)
 }
+
+func TypeAliasesEndVf64Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.EndVector(numElems)
+}
+
 func TypeAliasesAddVf64(builder *flatbuffers.Builder, vf64 flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(vf64), 0)
 }
-func TypeAliasesStartVf64Vector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(8, numElems, 8)
-}
+
 func TypeAliasesEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
 }

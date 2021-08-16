@@ -19,8 +19,8 @@
 package main
 
 import (
-	sample "MyGame/Sample"
 	"fmt"
+	sample "github.com/google/flatbuffers/MyGame/Sample"
 	flatbuffers "github.com/google/flatbuffers/go"
 	"strconv"
 )
@@ -113,8 +113,8 @@ func main() {
 	// to query the length of the vector. You can index the vector by passing an index value
 	// into the accessor.
 	for i := 0; i < monster.InventoryLength(); i++ {
-		assert(monster.Inventory(i) == byte(i), "`monster.Inventory(i)`",
-			strconv.Itoa(int(monster.Inventory(i))), strconv.Itoa(int(byte(i))))
+		assert(monster.InventoryBytes()[i] == byte(i), "`monster.Inventory(i)`",
+			strconv.Itoa(int(monster.InventoryBytes()[i])), strconv.Itoa(int(byte(i))))
 	}
 
 	expectedWeaponNames := []string{"Sword", "Axe"}

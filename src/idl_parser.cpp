@@ -2481,7 +2481,7 @@ bool Parser::SupportsDefaultVectorsAndStrings() const {
 bool Parser::SupportsAdvancedUnionFeatures() const {
   return opts.lang_to_generate != 0 &&
          (opts.lang_to_generate &
-          ~(IDLOptions::kCpp | IDLOptions::kTs | IDLOptions::kPhp |
+          ~(IDLOptions::kCpp | IDLOptions::kGo | IDLOptions::kTs | IDLOptions::kPhp |
             IDLOptions::kJava | IDLOptions::kCSharp | IDLOptions::kKotlin |
             IDLOptions::kBinary | IDLOptions::kSwift)) == 0;
 }
@@ -3418,9 +3418,29 @@ CheckedError Parser::DoParse(const char *source, const char **include_paths,
       EXPECT(';');
     } else if (IsIdent("include")) {
       return Error("includes must come before declarations");
-    } else if (IsIdent("attribute")) {
+    }  //
+    else if (IsIdent("attribute")) {
       NEXT();
       auto name = attribute_;
+      // support go module define in attribute
+      // attribute "go_module:github.com/google/flatbuffers/go-example/";
+      //  then go code:
+      //  import ( example "MyGame/Example" )
+      // should be compile to
+      // import ( example
+      // "github.com/google/flatbuffers/go-example/MyGame/Example" )
+      if (name.length()) {
+        std::vector<std::string> kv;
+        split(name, kv, ":");
+        if (kv.size() == 2) {
+          std::string t1 = kv[0];
+          std::string t2 = kv[1];
+          if ((t1 == "go_module") && (t1.length()) && (t1.length())) {
+            go_module_ = t2;
+          }
+        }
+      }
+      //
       if (Is(kTokenIdentifier)) {
         NEXT();
       } else {

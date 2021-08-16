@@ -7,14 +7,23 @@ import (
 )
 
 type StatT struct {
-	Id string
-	Val int64
+	Id    string
+	Val   int64
 	Count uint16
 }
 
+// StatT object pack function
 func (t *StatT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
-	idOffset := builder.CreateString(t.Id)
+	if t == nil {
+		return 0
+	}
+	idOffset := flatbuffers.UOffsetT(0)
+	if len(t.Id) > 0 {
+		idOffset = builder.CreateString(t.Id)
+	}
+
+	// pack process all field
+
 	StatStart(builder)
 	StatAddId(builder, idOffset)
 	StatAddVal(builder, t.Val)
@@ -22,6 +31,7 @@ func (t *StatT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return StatEnd(builder)
 }
 
+// StatT object unpack function
 func (rcv *Stat) UnPackTo(t *StatT) {
 	t.Id = string(rcv.Id())
 	t.Val = rcv.Val()
@@ -29,7 +39,9 @@ func (rcv *Stat) UnPackTo(t *StatT) {
 }
 
 func (rcv *Stat) UnPack() *StatT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &StatT{}
 	rcv.UnPackTo(t)
 	return t
@@ -39,6 +51,7 @@ type Stat struct {
 	_tab flatbuffers.Table
 }
 
+// GetRootAsStat shortcut to access root table
 func GetRootAsStat(buf []byte, offset flatbuffers.UOffsetT) *Stat {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &Stat{}
@@ -97,15 +110,19 @@ func (rcv *Stat) MutateCount(n uint16) bool {
 func StatStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
+
 func StatAddId(builder *flatbuffers.Builder, id flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(id), 0)
 }
+
 func StatAddVal(builder *flatbuffers.Builder, val int64) {
 	builder.PrependInt64Slot(1, val, 0)
 }
+
 func StatAddCount(builder *flatbuffers.Builder, count uint16) {
 	builder.PrependUint16Slot(2, count, 0)
 }
+
 func StatEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
 }

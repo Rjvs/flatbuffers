@@ -12,7 +12,9 @@ type AbilityT struct {
 }
 
 func (t *AbilityT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
 	return CreateAbility(builder, t.Id, t.Distance)
 }
 func (rcv *Ability) UnPackTo(t *AbilityT) {
@@ -21,7 +23,9 @@ func (rcv *Ability) UnPackTo(t *AbilityT) {
 }
 
 func (rcv *Ability) UnPack() *AbilityT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &AbilityT{}
 	rcv.UnPackTo(t)
 	return t
@@ -29,6 +33,21 @@ func (rcv *Ability) UnPack() *AbilityT {
 
 type Ability struct {
 	_tab flatbuffers.Struct
+}
+
+// GetStructVectorAsAbility shortcut to access struct in vector of unions
+func GetStructVectorAsAbility(table *flatbuffers.Table) *Ability {
+	n := flatbuffers.GetUOffsetT(table.Bytes[table.Pos:])
+	x := &Ability{}
+	x.Init(table.Bytes, n+table.Pos)
+	return x
+}
+
+// GetStructAsAbility shortcut to access struct in single union field
+func GetStructAsAbility(table *flatbuffers.Table) *Ability {
+	x := &Ability{}
+	x.Init(table.Bytes, table.Pos)
+	return x
 }
 
 func (rcv *Ability) Init(buf []byte, i flatbuffers.UOffsetT) {
@@ -44,14 +63,14 @@ func (rcv *Ability) Id() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
 func (rcv *Ability) MutateId(n uint32) bool {
-	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
+	return rcv._tab.MutateUint32(rcv._tab.Pos + flatbuffers.UOffsetT(0), n)
 }
 
 func (rcv *Ability) Distance() uint32 {
 	return rcv._tab.GetUint32(rcv._tab.Pos + flatbuffers.UOffsetT(4))
 }
 func (rcv *Ability) MutateDistance(n uint32) bool {
-	return rcv._tab.MutateUint32(rcv._tab.Pos+flatbuffers.UOffsetT(4), n)
+	return rcv._tab.MutateUint32(rcv._tab.Pos + flatbuffers.UOffsetT(4), n)
 }
 
 func CreateAbility(builder *flatbuffers.Builder, id uint32, distance uint32) flatbuffers.UOffsetT {

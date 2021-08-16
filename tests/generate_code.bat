@@ -31,6 +31,10 @@ set TEST_CPP_FLAGS=--gen-compare --cpp-ptr-type flatbuffers::unique_ptr %TEST_CP
 set TEST_CS_FLAGS=--cs-gen-json-serializer
 set TEST_TS_FLAGS=--gen-name-strings
 set TEST_BASE_FLAGS=--reflect-names --gen-mutable --gen-object-api
+set TEST_NOINCL_FLAGS=%TEST_BASE_FLAGS% --no-includes --no-fb-import
+..\%buildtype%\flatc.exe  -g --gen-object-api --gen-mutable -I include_test monster_test.fbs
+..\%buildtype%\flatc.exe  -g --gen-object-api --gen-mutable  ./union_vector/union_vector.fbs
+
 set TEST_RUST_FLAGS=%TEST_BASE_FLAGS% --gen-name-strings --gen-all
 set TEST_NOINCL_FLAGS=%TEST_BASE_FLAGS% --no-includes
 

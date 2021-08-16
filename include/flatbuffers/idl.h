@@ -868,7 +868,8 @@ class Parser : public ParserState {
   // Checks that the schema represented by this parser is a safe evolution
   // of the schema provided. Returns non-empty error on any problems.
   std::string ConformTo(const Parser &base);
-
+  void split(const std::string &s, std::vector<std::string> &tokens,
+             const std::string &delimiters);
   // Similar to Parse(), but now only accepts JSON to be parsed into a
   // FlexBuffer.
   bool ParseFlexBuffer(const char *source, const char *source_filename,
@@ -1007,6 +1008,9 @@ class Parser : public ParserState {
   flexbuffers::Reference flex_root_;
   StructDef *root_struct_def_;
   std::string file_identifier_;
+  // go_module_ support go module in attribute like this:
+  // attribute "go_module:github.com/google/flatbuffers/";
+  std::string go_module_;
   std::string file_extension_;
 
   std::map<uint64_t, std::string> included_files_;

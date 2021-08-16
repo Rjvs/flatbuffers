@@ -9,17 +9,26 @@ import (
 type InParentNamespaceT struct {
 }
 
+// InParentNamespaceT object pack function
 func (t *InParentNamespaceT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
+
+	// pack process all field
+
 	InParentNamespaceStart(builder)
 	return InParentNamespaceEnd(builder)
 }
 
+// InParentNamespaceT object unpack function
 func (rcv *InParentNamespace) UnPackTo(t *InParentNamespaceT) {
 }
 
 func (rcv *InParentNamespace) UnPack() *InParentNamespaceT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &InParentNamespaceT{}
 	rcv.UnPackTo(t)
 	return t
@@ -29,6 +38,7 @@ type InParentNamespace struct {
 	_tab flatbuffers.Table
 }
 
+// GetRootAsInParentNamespace shortcut to access root table
 func GetRootAsInParentNamespace(buf []byte, offset flatbuffers.UOffsetT) *InParentNamespace {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &InParentNamespace{}
@@ -55,6 +65,7 @@ func (rcv *InParentNamespace) Table() flatbuffers.Table {
 func InParentNamespaceStart(builder *flatbuffers.Builder) {
 	builder.StartObject(0)
 }
+
 func InParentNamespaceEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
 }

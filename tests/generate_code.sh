@@ -31,6 +31,8 @@ TEST_BASE_FLAGS="--reflect-names --gen-mutable --gen-object-api"
 TEST_RUST_FLAGS="$TEST_BASE_FLAGS --gen-all --gen-name-strings"
 TEST_NOINCL_FLAGS="$TEST_BASE_FLAGS --no-includes"
 
+../flatc -g --gen-object-api --gen-mutable  -I include_test monster_test.fbs
+../flatc -g --gen-object-api --gen-mutable  ./union_vector/union_vector.fbs
 
 ../flatc --binary --cpp --java --kotlin  --csharp --dart --go --lobster --lua --ts --php --grpc \
 $TEST_NOINCL_FLAGS $TEST_CPP_FLAGS $TEST_CS_FLAGS -I include_test monster_test.fbs monsterdata_test.json

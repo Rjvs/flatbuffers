@@ -12,7 +12,9 @@ type TestT struct {
 }
 
 func (t *TestT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
 	return CreateTest(builder, t.A, t.B)
 }
 func (rcv *Test) UnPackTo(t *TestT) {
@@ -21,7 +23,9 @@ func (rcv *Test) UnPackTo(t *TestT) {
 }
 
 func (rcv *Test) UnPack() *TestT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &TestT{}
 	rcv.UnPackTo(t)
 	return t
@@ -29,6 +33,21 @@ func (rcv *Test) UnPack() *TestT {
 
 type Test struct {
 	_tab flatbuffers.Struct
+}
+
+// GetStructVectorAsTest shortcut to access struct in vector of unions
+func GetStructVectorAsTest(table *flatbuffers.Table) *Test {
+	n := flatbuffers.GetUOffsetT(table.Bytes[table.Pos:])
+	x := &Test{}
+	x.Init(table.Bytes, n+table.Pos)
+	return x
+}
+
+// GetStructAsTest shortcut to access struct in single union field
+func GetStructAsTest(table *flatbuffers.Table) *Test {
+	x := &Test{}
+	x.Init(table.Bytes, table.Pos)
+	return x
 }
 
 func (rcv *Test) Init(buf []byte, i flatbuffers.UOffsetT) {
@@ -44,14 +63,14 @@ func (rcv *Test) A() int16 {
 	return rcv._tab.GetInt16(rcv._tab.Pos + flatbuffers.UOffsetT(0))
 }
 func (rcv *Test) MutateA(n int16) bool {
-	return rcv._tab.MutateInt16(rcv._tab.Pos+flatbuffers.UOffsetT(0), n)
+	return rcv._tab.MutateInt16(rcv._tab.Pos + flatbuffers.UOffsetT(0), n)
 }
 
 func (rcv *Test) B() int8 {
 	return rcv._tab.GetInt8(rcv._tab.Pos + flatbuffers.UOffsetT(2))
 }
 func (rcv *Test) MutateB(n int8) bool {
-	return rcv._tab.MutateInt8(rcv._tab.Pos+flatbuffers.UOffsetT(2), n)
+	return rcv._tab.MutateInt8(rcv._tab.Pos + flatbuffers.UOffsetT(2), n)
 }
 
 func CreateTest(builder *flatbuffers.Builder, a int16, b int8) flatbuffers.UOffsetT {

@@ -9,17 +9,26 @@ import (
 type MonsterT struct {
 }
 
+// MonsterT object pack function
 func (t *MonsterT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
+
+	// pack process all field
+
 	MonsterStart(builder)
 	return MonsterEnd(builder)
 }
 
+// MonsterT object unpack function
 func (rcv *Monster) UnPackTo(t *MonsterT) {
 }
 
 func (rcv *Monster) UnPack() *MonsterT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &MonsterT{}
 	rcv.UnPackTo(t)
 	return t
@@ -29,6 +38,7 @@ type Monster struct {
 	_tab flatbuffers.Table
 }
 
+// GetRootAsMonster shortcut to access root table
 func GetRootAsMonster(buf []byte, offset flatbuffers.UOffsetT) *Monster {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &Monster{}
@@ -55,6 +65,7 @@ func (rcv *Monster) Table() flatbuffers.Table {
 func MonsterStart(builder *flatbuffers.Builder) {
 	builder.StartObject(0)
 }
+
 func MonsterEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
 }

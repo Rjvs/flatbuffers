@@ -10,19 +10,28 @@ type ReferrableT struct {
 	Id uint64
 }
 
+// ReferrableT object pack function
 func (t *ReferrableT) Pack(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
-	if t == nil { return 0 }
+	if t == nil {
+		return 0
+	}
+
+	// pack process all field
+
 	ReferrableStart(builder)
 	ReferrableAddId(builder, t.Id)
 	return ReferrableEnd(builder)
 }
 
+// ReferrableT object unpack function
 func (rcv *Referrable) UnPackTo(t *ReferrableT) {
 	t.Id = rcv.Id()
 }
 
 func (rcv *Referrable) UnPack() *ReferrableT {
-	if rcv == nil { return nil }
+	if rcv == nil {
+		return nil
+	}
 	t := &ReferrableT{}
 	rcv.UnPackTo(t)
 	return t
@@ -32,6 +41,7 @@ type Referrable struct {
 	_tab flatbuffers.Table
 }
 
+// GetRootAsReferrable shortcut to access root table
 func GetRootAsReferrable(buf []byte, offset flatbuffers.UOffsetT) *Referrable {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
 	x := &Referrable{}
@@ -70,9 +80,11 @@ func (rcv *Referrable) MutateId(n uint64) bool {
 func ReferrableStart(builder *flatbuffers.Builder) {
 	builder.StartObject(1)
 }
+
 func ReferrableAddId(builder *flatbuffers.Builder, id uint64) {
 	builder.PrependUint64Slot(0, id, 0)
 }
+
 func ReferrableEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
 }
